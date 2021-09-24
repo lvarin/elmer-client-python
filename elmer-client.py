@@ -22,7 +22,11 @@ def run(file_name):
         print("ERROR (%d): %s %s" % (response.status_code, BASE_URL, response.text))
         sys.exit(3)
 
-    jobid = response.json()["jobid"]
+    try:
+      jobid = response.json()["jobid"]
+    except JSONDecodeError as JsonErr:
+      print("ERROR (%d): <%s/api/v1/cases> %s" % (response.status_code, BASE_URL, response.text))
+      sys.exit(4)
 
     status = ""
     while status not in ("done", "failed"):
