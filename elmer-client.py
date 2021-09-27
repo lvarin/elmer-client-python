@@ -23,14 +23,16 @@ def run(file_name):
         sys.exit(3)
 
     try:
-      jobid = response.json()["jobid"]
-    except JSONDecodeError as JsonErr:
-      print("ERROR (%d): <%s/api/v1/cases> %s" % (response.status_code, BASE_URL, response.text))
-      sys.exit(4)
+        jobid = response.json()["jobid"]
+    except JSONDecodeError as jsonerr:
+        print("ERROR (%d): <%s/api/v1/cases> %s" % (response.status_code,
+                                                    ELMERRESTURL, response.text))
+        print(jsonerr)
+        sys.exit(4)
 
     status = ""
     while status not in ("done", "failed"):
-        response_status = requests.get('%s/api/v1/result/%s' % (BASE_URL, jobid),
+        response_status = requests.get('%s/api/v1/result/%s' % (ELMERRESTURL, jobid),
                                        auth=(USER, PASSWD))
         try:
             status = response_status.json()["metadata"]["status"]
@@ -44,7 +46,7 @@ def run(file_name):
     local_filename = './results-%s.zip' % jobid
 
     print("Downloading %s" % local_filename)
-    with requests.get('%s/api/v1/result/%s/file' % (BASE_URL, jobid),
+    with requests.get('%s/api/v1/result/%s/file' % (ELMERRESTURL, jobid),
                       auth=(USER, PASSWD),
                       stream=True) as res:
         res.raise_for_status()
@@ -57,7 +59,8 @@ def log(job_id):
     '''
       Return the log of a given jobid
     '''
-    response_status = requests.get('%s/api/v1/result/%s' % (BASE_URL, job_id), auth=(USER, PASSWD))
+    response_status = requests.get('%s/api/v1/result/%s' % (ELMERRESTURL, job_id),
+                                   auth=(USER, PASSWD))
     try:
         print(response_status.json()['metadata']['logs'])
     except JSONDecodeError:
@@ -81,11 +84,11 @@ except KeyError:
     USER = 'elmeruser'
 
 try:
-    BASE_URL = os.environ['ELMERRESTURL']
+    ELMERRESTURL = os.environ['ELMERRESTURL']
 except KeyError:
-    BASE_URL = 'https://elmerrest-devel.rahtiapp.fi'
+    ELMERRESTURL = 'https://elmerrest-devel.rahtiapp.fi'
 #
-print("Using:\n    * USER: '%s'\n    * BASE_URL: '%s'." % (USER, BASE_URL))
+print("Using:\n    * USER: '%s'\n    * ELMERRESTURL: '%s'." % (USER, ELMERRESTURL))
 print("You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that")
 #
 DIRNAME = os.path.dirname(__file__)
