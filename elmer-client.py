@@ -15,12 +15,16 @@ def run(file_name):
     '''
       Uploads a zip file, runs it till the end, and downloads the results into a given zip file
     '''
-    response = requests.post('%s/api/v1/cases' % BASE_URL,
-                             auth=(USER, PASSWD),
-                             files={'upfile': open(file_name, 'rb')})
-    if response.status_code != 200:
-        print("ERROR (%d): %s %s" % (response.status_code, BASE_URL, response.text))
-        sys.exit(3)
+    try:
+        response = requests.post('%s/api/v1/cases' % ELMERRESTURL,
+                                 auth=(USER, PASSWD),
+                                 files={'upfile': open(file_name, 'rb')})
+        if response.status_code != 200:
+            print("ERROR (%d): %s\n\n%s" % (response.status_code, response.url, response.text))
+            sys.exit(3)
+    except requests.exceptions.ConnectionError as conn_err:
+        print(conn_err)
+        sys.exit(5)
 
     try:
         jobid = response.json()["jobid"]
