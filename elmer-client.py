@@ -53,10 +53,13 @@ def run(file_name):
     with requests.get('%s/api/v1/result/%s/file' % (ELMERRESTURL, jobid),
                       auth=(USER, PASSWD),
                       stream=True) as res:
-        res.raise_for_status()
-        with open(local_filename, 'wb') as dff:
-            for chunk in res.iter_content(chunk_size=8192):
-                dff.write(chunk)
+        try:
+            res.raise_for_status()
+            with open(local_filename, 'wb') as dff:
+                for chunk in res.iter_content(chunk_size=8192):
+                    dff.write(chunk)
+        except requests.exceptions.HTTPError as httperr:
+            print("ERROR: %s" % httperr)
     print("DONE")
 #
 def log(job_id):
