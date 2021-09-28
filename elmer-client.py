@@ -90,7 +90,7 @@ except KeyError:
 try:
     ELMERRESTURL = os.environ['ELMERRESTURL']
 except KeyError:
-    ELMERRESTURL = 'https://elmerrest-devel.rahtiapp.fi'
+    ELMERRESTURL = 'https://ahtools-devel.rahtiapp.fi'
 #
 print("Using:\n    * USER: '%s'\n    * ELMERRESTURL: '%s'." % (USER, ELMERRESTURL))
 print("You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that")
