@@ -4,7 +4,7 @@ This is a client for the ELMER REST API. It csn be used as a fast way to submit 
 it has two options `run` and `log`:
 
 ```sh
-$ ./elmer-client.py    
+$ ./elmer-client.py
 Use:
  ./elmer-client.py
         run <Zip file>
@@ -16,7 +16,7 @@ Use:
 This command receives a zip file, runs it showing the status every 5 seconds, and then downloads the results. For example:
 
 ```sh
-$ vim PASSWORD # add the passowrd there
+$ vim passwd # add the password there
 $ zip case.zip */* *;
   adding: case.sif (deflated 53%)
   adding: ComplexMode.f90 (deflated 78%)
@@ -25,10 +25,10 @@ $ zip case.zip */* *;
   adding: params_sif.txt (deflated 3%)
   adding: stator3d/ (stored 0%)
   adding: stator_material_sif.txt (deflated 83%)
-$ ./elmer-client.py run case.zip    
+$ ./elmer-client.py run case.zip
 Using:
     * USER: 'elmeruser'
-    * BASE_URL: 'https://elmerrest-devel.rahtiapp.fi'.
+    * ELMERRESTURL: 'https://elmerrest-devel.rahtiapp.fi'.
 You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that
 ---
 Reading password from ./passwd
@@ -49,7 +49,7 @@ DONE
 $ ./elmer-client.py log case-1607697292 | head -n 25
 Using:
     * USER: 'elmeruser'
-    * BASE_URL: 'https://elmerrest-devel.rahtiapp.fi'.
+    * ELMERRESTURL: 'https://elmerrest-devel.rahtiapp.fi'.
 You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that
 ---
 Reading password from ./passwd
