@@ -72,12 +72,26 @@ def log(job_id):
         print(response_status.json()['metadata']['logs'])
     except JSONDecodeError:
         print("ERROR: ", response_status.text)
+
+def list():
+    '''
+        List all cases
+    '''
+    response_status = requests.get('%s/api/v1/job/' % (ELMERRESTURL),
+                                   auth=(USER, PASSWD))
+    try:
+        for case in response_status.json():
+            print(case)
+    except JSONDecodeError:
+        print("ERROR: ", response_status.text)
+
 #####
 
 HELP_STRING = """Use:
 %s
         run <Zip file>
-        log <jobid>""" % sys.argv[0]
+        log <jobid>
+        list""" % sys.argv[0]
 
 try:
     VERB = sys.argv[1]
@@ -116,6 +130,8 @@ try:
         run(sys.argv[2])
     elif VERB == 'log':
         log(sys.argv[2])
+    elif VERB == 'list':
+        list()
     else:
         print(HELP_STRING)
         sys.exit(3)
