@@ -124,7 +124,7 @@ try:
     with open('%s/passwd' % DIRNAME, 'r', encoding="utf8") as pf:
         PASSWD = pf.read().rstrip()
 except FileNotFoundError:
-    print("Cannot find '%s/passwd' file" % DIRNAME)
+    print(f"Cannot find '{DIRNAME}/passwd' file")
     sys.exit(2)
 #
 
