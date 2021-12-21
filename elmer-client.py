@@ -23,7 +23,7 @@ def run(file_name):
             print("ERROR (%d): %s\n\n%s" % (response.status_code, response.url, response.text))
             sys.exit(5)
     except requests.exceptions.ConnectionError as conn_err:
-        print("ERROR: Cannot connect to '%s'" % ELMERRESTURL)
+        print("\nERROR: Cannot connect to '%s'" % ELMERRESTURL)
         print("ERROR:", conn_err)
         sys.exit(6)
 
@@ -76,8 +76,8 @@ def log(job_id):
     except JSONDecodeError as json_err:
         print("ERROR:", json_err)
         sys.exit(8)
-        
-def list():
+
+def list_job():
     '''
         List all cases
     '''
@@ -121,7 +121,7 @@ print("---")
 
 try:
     print("Reading password from %s/passwd" % DIRNAME)
-    with open('%s/passwd' % DIRNAME, 'r') as pf:
+    with open('%s/passwd' % DIRNAME, 'r', encoding="utf8") as pf:
         PASSWD = pf.read().rstrip()
 except FileNotFoundError:
     print("Cannot find '%s/passwd' file" % DIRNAME)
@@ -134,7 +134,7 @@ try:
     elif VERB == 'log':
         log(sys.argv[2])
     elif VERB == 'list':
-        list()
+        list_job()
     else:
         print(HELP_STRING)
         sys.exit(3)
