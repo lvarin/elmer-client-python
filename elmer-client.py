@@ -32,7 +32,7 @@ def run(file_name):
     except JSONDecodeError as jsonerr:
         print("ERROR (%d): <%s/api/v1/cases> %s" % (response.status_code,
                                                     ELMERRESTURL, response.text))
-        print("ERROR: ",jsonerr)
+        print("ERROR: ", jsonerr)
         sys.exit(7)
 
     status = ""
