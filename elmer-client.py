@@ -21,18 +21,19 @@ def run(file_name):
                                  files={'upfile': open(file_name, 'rb')})
         if response.status_code != 200:
             print("ERROR (%d): %s\n\n%s" % (response.status_code, response.url, response.text))
-            sys.exit(3)
+            sys.exit(5)
     except requests.exceptions.ConnectionError as conn_err:
-        print(conn_err)
-        sys.exit(5)
+        print("ERROR: Cannot connect to '%s'" % ELMERRESTURL)
+        print("ERROR:", conn_err)
+        sys.exit(6)
 
     try:
         jobid = response.json()["jobid"]
     except JSONDecodeError as jsonerr:
         print("ERROR (%d): <%s/api/v1/cases> %s" % (response.status_code,
                                                     ELMERRESTURL, response.text))
-        print(jsonerr)
-        sys.exit(4)
+        print("ERROR: ",jsonerr)
+        sys.exit(7)
 
     status = ""
     while status not in ("done", "failed"):
@@ -45,7 +46,7 @@ def run(file_name):
             print(response_status.text)
 
         print("%s [%s] Status: %s" % (asctime(), jobid, status))
-        sleep(5)
+        sleep(7)
 
     local_filename = './results-%s.zip' % jobid
 
@@ -68,10 +69,13 @@ def log(job_id):
     '''
     response_status = requests.get('%s/api/v1/result/%s' % (ELMERRESTURL, job_id),
                                    auth=(USER, PASSWD))
+    if response_status.status_code != '200':
+        print("ERROR: (%d)" % response_status.status_code)
     try:
         print(response_status.json()['metadata']['logs'])
-    except JSONDecodeError:
-        print("ERROR: ", response_status.text)
+    except JSONDecodeError as json_err:
+        print("ERROR:", json_err)
+        sys.exit(8)
 #####
 
 HELP_STRING = """Use:
@@ -83,7 +87,7 @@ try:
     VERB = sys.argv[1]
 except IndexError:
     print(HELP_STRING)
-    sys.exit(2)
+    sys.exit(1)
 
 try:
     USER = os.environ['ELMERRESTUSER']
@@ -108,7 +112,7 @@ try:
         PASSWD = pf.read().rstrip()
 except FileNotFoundError:
     print("Cannot find '%s/passwd' file" % DIRNAME)
-    sys.exit(1)
+    sys.exit(2)
 #
 
 try:
@@ -121,5 +125,5 @@ try:
         sys.exit(3)
 except IndexError:
     print(HELP_STRING)
-    sys.exit(2)
+    sys.exit(4)
 #
