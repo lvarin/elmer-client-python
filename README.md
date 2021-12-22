@@ -1,17 +1,18 @@
 # ELMERREST client
 
 This is a client for the ELMER REST API. It csn be used as a fast way to submit jobs, or as an example to integrate ELMERREST API in a bigger project.
-it has two options `run` and `log`:
+it has three options `run`, `log` and `list`:
 
 ```sh
-$ ./elmer-client.py
+$ ./elmer_client.py
 Use:
- ./elmer-client.py
+ ./elmer_client.py
         run <Zip file>
         log <jobid>
+        list
 ```
 
-## elmer-client.py run
+## elmer_client.py run
 
 This command receives a zip file, runs it showing the status every 5 seconds, and then downloads the results. For example:
 
@@ -43,10 +44,10 @@ Downloading ./results-case-1607697292.zip
 DONE
 ```
 
-## elmer-client.py log
+## elmer_client.py log
 
 ```sh
-$ ./elmer-client.py log case-1607697292 | head -n 25
+$ ./elmer_client.py log case-1607697292 | head -n 25
 Using:
     * USER: 'elmeruser'
     * ELMERRESTURL: 'https://elmerrest-devel.rahtiapp.fi'.
@@ -73,3 +74,22 @@ Allocating for 3960 knots and 5850 elements.
 Loading 3960 Elmer nodes from mesh.nodes
 Loading 5850 bulk elements from mesh.elements
 ```
+
+## elmer_client.py
+
+```
+$ ./elmer_client.py list
+Using:
+    * USER: 'elmeruser'
+    * ELMERRESTURL: 'https://ahtools-devel.rahtiapp.fi'.
+You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that
+---
+Reading password from ./passwd
+statoreigenmode-1633951725
+statoreigenmode-1633951729
+statoreigenmode-1633953267
+statoreigenmode-1633955245
+statoreigenmode-1633957518
+statoreigenmode-1639114711
+```
+
