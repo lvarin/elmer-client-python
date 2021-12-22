@@ -16,28 +16,28 @@ def run(file_name):
       Uploads a zip file, runs it till the end, and downloads the results into a given zip file
     '''
     try:
-        response = requests.post('%s/api/v1/cases' % ELMERRESTURL,
-                                 auth=(USER, PASSWD),
-                                 files={'upfile': open(file_name, 'rb')})
+        with open(file_name, 'rb') as upfile:
+            response = requests.post(f'{ELMERRESTURL}/api/v1/cases',
+                                     auth=(USER, PASSWD),
+                                     files={'upfile': upfile})
         if response.status_code != 200:
-            print("ERROR (%d): %s\n\n%s" % (response.status_code, response.url, response.text))
+            print(f"ERROR ({response.status_code}): {response.url}\n\n{response.text}")
             sys.exit(5)
     except requests.exceptions.ConnectionError as conn_err:
-        print("\nERROR: Cannot connect to '%s'" % ELMERRESTURL)
+        print(f"\nERROR: Cannot connect to '{ELMERRESTURL}'")
         print("ERROR:", conn_err)
         sys.exit(6)
 
     try:
         jobid = response.json()["jobid"]
     except JSONDecodeError as jsonerr:
-        print("ERROR (%d): <%s/api/v1/cases> %s" % (response.status_code,
-                                                    ELMERRESTURL, response.text))
+        print(f"ERROR ({response.status_code}): <{ELMERRESTURL}/api/v1/cases> {response.text}")
         print("ERROR: ", jsonerr)
         sys.exit(7)
 
     status = ""
     while status not in ("done", "failed"):
-        response_status = requests.get('%s/api/v1/result/%s' % (ELMERRESTURL, jobid),
+        response_status = requests.get(f'{ELMERRESTURL}/api/v1/result/{jobid}',
                                        auth=(USER, PASSWD))
         try:
             status = response_status.json()["metadata"]["status"]
@@ -45,13 +45,13 @@ def run(file_name):
             print("ERROR: ", jsonerr)
             print(response_status.text)
 
-        print("%s [%s] Status: %s" % (asctime(), jobid, status))
-        sleep(7)
+        print(f"{asctime()} [{jobid}] Status: {status}")
+        sleep(5)
 
-    local_filename = './results-%s.zip' % jobid
+    local_filename = f'./results-{jobid}.zip'
 
-    print("Downloading %s" % local_filename)
-    with requests.get('%s/api/v1/result/%s/file' % (ELMERRESTURL, jobid),
+    print(f"Downloading {local_filename}")
+    with requests.get(f'{ELMERRESTURL}/api/v1/result/{jobid}/file',
                       auth=(USER, PASSWD),
                       stream=True) as res:
         try:
@@ -60,17 +60,17 @@ def run(file_name):
                 for chunk in res.iter_content(chunk_size=8192):
                     dff.write(chunk)
         except requests.exceptions.HTTPError as httperr:
-            print("ERROR: %s" % httperr)
+            print(f"ERROR: {httperr}")
     print("DONE")
 #
 def log(job_id):
     '''
       Return the log of a given jobid
     '''
-    response_status = requests.get('%s/api/v1/result/%s' % (ELMERRESTURL, job_id),
+    response_status = requests.get(f'{ELMERRESTURL}/api/v1/result/{job_id}',
                                    auth=(USER, PASSWD))
     if response_status.status_code != '200':
-        print("ERROR: (%d)" % response_status.status_code)
+        print(f"ERROR: ({response_status.status_code})")
     try:
         print(response_status.json()['metadata']['logs'])
     except JSONDecodeError as json_err:
@@ -81,7 +81,7 @@ def list_job():
     '''
         List all cases
     '''
-    response_status = requests.get('%s/api/v1/job/' % (ELMERRESTURL),
+    response_status = requests.get(f'{ELMERRESTURL}/api/v1/job/',
                                    auth=(USER, PASSWD))
     try:
         for case in response_status.json():
@@ -90,11 +90,11 @@ def list_job():
         print("ERROR: ", response_status.text)
 #####
 
-HELP_STRING = """Use:
-%s
+HELP_STRING = f"""Use:
+{sys.argv[0]}
         run <Zip file>
         log <jobid>
-        list""" % sys.argv[0]
+        list"""
 
 try:
     VERB = sys.argv[1]
@@ -112,7 +112,7 @@ try:
 except KeyError:
     ELMERRESTURL = 'https://ahtools-devel.rahtiapp.fi'
 #
-print("Using:\n    * USER: '%s'\n    * ELMERRESTURL: '%s'." % (USER, ELMERRESTURL))
+print(f"Using:\n    * USER: '{USER}'\n    * ELMERRESTURL: '{ELMERRESTURL}'.")
 print("You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that")
 #
 DIRNAME = os.path.dirname(__file__)
@@ -120,8 +120,8 @@ DIRNAME = os.path.dirname(__file__)
 print("---")
 
 try:
-    print("Reading password from %s/passwd" % DIRNAME)
-    with open('%s/passwd' % DIRNAME, 'r', encoding="utf8") as pf:
+    print(f"Reading password from {DIRNAME}/passwd")
+    with open(f'{DIRNAME}/passwd', 'r', encoding="utf8") as pf:
         PASSWD = pf.read().rstrip()
 except FileNotFoundError:
     print(f"Cannot find '{DIRNAME}/passwd' file")
