@@ -131,7 +131,7 @@ except FileNotFoundError:
 
 try:
     if VERB == 'run':
-        THREADS = list()
+        THREADS = []
         for job in sys.argv[2:]:
             x = threading.Thread(target=run, args=(job,))
             THREADS.append(x)
