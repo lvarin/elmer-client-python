@@ -7,6 +7,7 @@
 import os
 import sys
 from time import sleep, asctime
+import threading
 import requests
 
 from simplejson.errors import JSONDecodeError
@@ -50,7 +51,7 @@ def run(file_name):
 
     local_filename = f'./results-{jobid}.zip'
 
-    print(f"Downloading {local_filename}")
+    print(f"{asctime()} [{jobid}] Downloading {local_filename}")
     with requests.get(f'{ELMERRESTURL}/api/v1/result/{jobid}/file',
                       auth=(USER, PASSWD),
                       stream=True) as res:
@@ -61,7 +62,7 @@ def run(file_name):
                     dff.write(chunk)
         except requests.exceptions.HTTPError as httperr:
             print(f"ERROR: {httperr}")
-    print("DONE")
+    print(f"{asctime()} [{jobid}] DONE")
 #
 def log(job_id):
     '''
@@ -130,7 +131,14 @@ except FileNotFoundError:
 
 try:
     if VERB == 'run':
-        run(sys.argv[2])
+        THREADS = []
+        for job in sys.argv[2:]:
+            x = threading.Thread(target=run, args=(job,))
+            THREADS.append(x)
+            x.start()
+        for index, thread in enumerate(THREADS):
+            thread.join()
+
     elif VERB == 'log':
         log(sys.argv[2])
     elif VERB == 'list':
