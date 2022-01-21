@@ -12,6 +12,14 @@ Use:
         list
 ```
 
+## Install dependencies
+
+This client requires only two dependencies: `requests` to make the HTTP requests to the API, and `simplejson` to process the JSON returned by the API. In order to install the dependencies run:
+
+```
+pip install -r requirements.txt
+```
+
 ## elmer_client.py run
 
 This command receives a zip file, runs it showing the status every 5 seconds, and then downloads the results. For example:
