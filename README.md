@@ -20,6 +20,24 @@ This client requires only two dependencies: `requests` to make the HTTP requests
 pip install -r requirements.txt
 ```
 
+## Run with docker
+
+First, you need to build the container image by running this command in this repository folder:
+
+```
+docker build . -t elmer-client
+```
+
+Then you can run it like this:
+
+```
+docker run --rm -it -v $PWD:/data/ elmer-client:latest
+```
+
+The option `-v $PWD:/data` is mounting the present/current working directory into the container. So any file available in the folder you run the docker command from, will be also available inside the container, and viceversa.
+
+This means that you must be in the same folder as the case zip file you want to run, and that afterwards the results will be also written in that folder.
+
 ## elmer_client.py run
 
 This command receives a zip file, runs it showing the status every 5 seconds, and then downloads the results. For example:
