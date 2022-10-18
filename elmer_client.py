@@ -19,6 +19,7 @@ def run(file_name):
     try:
         with open(file_name, 'rb') as upfile:
             response = requests.post(f'{ELMERRESTURL}/api/v1/cases',
+                                     timeout=30,
                                      auth=(USER, PASSWD),
                                      files={'upfile': upfile})
         if response.status_code != 200:
@@ -36,7 +37,8 @@ def run(file_name):
         print("ERROR: ", jsonerr)
         sys.exit(7)
     except TypeError as terr:
-        print(f"ERROR ({response.status_code}): {response.request.method} <{ELMERRESTURL}/api/v1/cases> {response.text}")
+        print(f"ERROR ({response.status_code}): {response.request.method}\
+                <{ELMERRESTURL}/api/v1/cases> {response.text}")
         print("ERROR: ", terr)
         sys.exit(9)
 
@@ -44,6 +46,7 @@ def run(file_name):
     status = ""
     while status not in ("done", "failed"):
         response_status = requests.get(f'{ELMERRESTURL}/api/v1/result/{jobid}',
+                                       timeout=15,
                                        auth=(USER, PASSWD))
         try:
             status = response_status.json()["metadata"]["status"]
@@ -58,6 +61,7 @@ def run(file_name):
 
     print(f"{asctime()} [{jobid}] Downloading {local_filename}")
     with requests.get(f'{ELMERRESTURL}/api/v1/result/{jobid}/file',
+                      timeout=15,
                       auth=(USER, PASSWD),
                       stream=True) as res:
         try:
@@ -74,6 +78,7 @@ def log(job_id):
       Return the log of a given jobid
     '''
     response_status = requests.get(f'{ELMERRESTURL}/api/v1/result/{job_id}',
+                                   timeout=15,
                                    auth=(USER, PASSWD))
     if response_status.status_code != '200':
         print(f"ERROR: ({response_status.status_code})")
@@ -88,6 +93,7 @@ def list_job():
         List all cases
     '''
     response_status = requests.get(f'{ELMERRESTURL}/api/v1/job/',
+                                   timeout=15,
                                    auth=(USER, PASSWD))
     try:
         for case in response_status.json():
@@ -100,6 +106,7 @@ def delete_job(job_id):
         Deletes the given job_id
     '''
     response_status = requests.delete(f'{ELMERRESTURL}/api/v1/job/{job_id}',
+                                   timeout=15,
                                    auth=(USER, PASSWD))
     if response_status.status_code != '200':
         print(f"ERROR: ({response_status.status_code})")
