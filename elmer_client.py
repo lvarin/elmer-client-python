@@ -35,6 +35,11 @@ def run(file_name):
         print(f"ERROR ({response.status_code}): <{ELMERRESTURL}/api/v1/cases> {response.text}")
         print("ERROR: ", jsonerr)
         sys.exit(7)
+    except TypeError as terr:
+        print(f"ERROR ({response.status_code}): {response.request.method} <{ELMERRESTURL}/api/v1/cases> {response.text}")
+        print("ERROR: ", terr)
+        sys.exit(9)
+
 
     status = ""
     while status not in ("done", "failed"):
@@ -89,12 +94,30 @@ def list_job():
             print(case)
     except JSONDecodeError:
         print("ERROR: ", response_status.text)
+
+def delete_job(job_id):
+    '''
+        Deletes the given job_id
+    '''
+    response_status = requests.delete(f'{ELMERRESTURL}/api/v1/job/{job_id}',
+                                   auth=(USER, PASSWD))
+    if response_status.status_code != '200':
+        print(f"ERROR: ({response_status.status_code})")
+        print(f"ERROR: ({response_status.text})")
+    try:
+        print(response_status.json()['metadata']['logs'])
+    except JSONDecodeError as json_err:
+        print("ERROR:", json_err)
+        sys.exit(8)
+
+
 #####
 
 HELP_STRING = f"""Use:
 {sys.argv[0]}
         run <Zip file>
         log <jobid>
+        delete <jobid>
         list"""
 
 try:
@@ -143,6 +166,8 @@ try:
         log(sys.argv[2])
     elif VERB == 'list':
         list_job()
+    elif VERB == 'delete':
+        delete_job(sys.argv[2])
     else:
         print(HELP_STRING)
         sys.exit(3)
