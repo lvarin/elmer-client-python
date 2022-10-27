@@ -113,7 +113,28 @@ Loading 3960 Elmer nodes from mesh.nodes
 Loading 5850 bulk elements from mesh.elements
 ```
 
-## elmer_client.py list
+### elmer_client.py info
+
+```sh
+$ ./elmer_client.py info case-1607697292
+{
+  "casename": "case",
+  "completiontime": "2022-04-21 07:20:45 +0000 UTC",
+  "elmerimage": "docker-registry.default.svc:5000/cscfi/elmerfem:latest",
+  "env": "JOBID=case-1650525418-bnarj\nELMERCASE=case\nELMERFOLDER=/elmer-cases/input/case977059072/IM_11kW_REST",
+  "folder": "/elmer-cases/input/case977059072/IM_11kW_REST",
+  "status": "done"
+}
+```
+
+### elmer_client.py delete_results
+
+```sh
+$ ./elmer_client.py delete_results case-1642673656-ighkk
+OK, files deleted
+```
+
+### elmer_client.py list
 
 ```
 $ export DEBUG=1
