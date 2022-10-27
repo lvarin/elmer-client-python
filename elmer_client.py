@@ -142,16 +142,23 @@ try:
     ELMERRESTURL = os.environ['ELMERRESTURL']
 except KeyError:
     ELMERRESTURL = 'https://ahtools-devel.rahtiapp.fi'
+
+try:
+    DEBUG = os.environ['DEBUG']
+except KeyError:
+    DEBUG = False
 #
-print(f"Using:\n    * USER: '{USER}'\n    * ELMERRESTURL: '{ELMERRESTURL}'.")
-print("You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that")
+if DEBUG:
+    print(f"Using:\n    * USER: '{USER}'\n    * ELMERRESTURL: '{ELMERRESTURL}'.", file=sys.stderr)
+    print("You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that", file=sys.stderr)
+    print("---", file=sys.stderr)
 #
 DIRNAME = os.path.dirname(__file__)
 
-print("---")
 
 try:
-    print(f"Reading password from {DIRNAME}/passwd")
+    if DEBUG:
+        print(f"Reading password from {DIRNAME}/passwd")
     with open(f'{DIRNAME}/passwd', 'r', encoding="utf8") as pf:
         PASSWD = pf.read().rstrip()
 except FileNotFoundError:

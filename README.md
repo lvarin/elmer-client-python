@@ -38,7 +38,17 @@ The option `-v $PWD:/data` is mounting the present/current working directory int
 
 This means that you must be in the same folder as the case zip file you want to run, and that afterwards the results will be also written in that folder.
 
-## elmer_client.py run
+## Activate DEBUG
+
+Export the environment variable `DEBUG`:
+
+```sh
+$ export DEBUG=1
+```
+
+## Commands
+
+### elmer_client.py run
 
 This command receives a zip file, runs it showing the status every 5 seconds, and then downloads the results. For example:
 
@@ -52,6 +62,7 @@ $ zip case.zip */* *;
   adding: params_sif.txt (deflated 3%)
   adding: stator3d/ (stored 0%)
   adding: stator_material_sif.txt (deflated 83%)
+$ export DEBUG=1
 $ ./elmer-client.py run case.zip
 Using:
     * USER: 'elmeruser'
@@ -70,9 +81,10 @@ Downloading ./results-case-1607697292.zip
 DONE
 ```
 
-## elmer_client.py log
+### elmer_client.py log
 
 ```sh
+$ export DEBUG=1
 $ ./elmer_client.py log case-1607697292 | head -n 25
 Using:
     * USER: 'elmeruser'
@@ -104,6 +116,7 @@ Loading 5850 bulk elements from mesh.elements
 ## elmer_client.py list
 
 ```
+$ export DEBUG=1
 $ ./elmer_client.py list
 Using:
     * USER: 'elmeruser'
