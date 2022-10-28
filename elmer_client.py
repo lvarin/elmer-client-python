@@ -8,8 +8,8 @@ import os
 import sys
 from time import sleep, asctime
 import threading
-import requests
 import json
+import requests
 
 from simplejson.errors import JSONDecodeError
 #
@@ -177,7 +177,8 @@ except KeyError:
 #
 if DEBUG:
     print(f"Using:\n    * USER: '{USER}'\n    * ELMERRESTURL: '{ELMERRESTURL}'.", file=sys.stderr)
-    print("You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that", file=sys.stderr)
+    print("You may use the environment varibles $ELMERRESTUSER and $ELMERRESTURL to change that",
+          file=sys.stderr)
     print("---", file=sys.stderr)
 #
 DIRNAME = os.path.dirname(__file__)
