@@ -117,20 +117,10 @@ def job_info(job_id):
         print("ERROR: ", response_status.text)
 
 
-def delete_job(job_id):
+def delete_results(job_id):
     '''
         Deletes the given job_id results
     '''
-    #response_status = requests.delete(f'{ELMERRESTURL}/api/v1/job/{job_id}',
-    #                               timeout=15,
-    #                               auth=(USER, PASSWD))
-    #if response_status.status_code != 200:
-    #    try:
-    #        print(response_status.json())
-    #    except JSONDecodeError:
-    #        print("ERROR: ", response_status.text)
-    #else:
-    #    print("OK, job stopped")
 
     response_status = requests.delete(f'{ELMERRESTURL}/api/v1/result/{job_id}/full',
                                    timeout=15,
@@ -211,7 +201,7 @@ try:
     elif VERB == 'info':
         job_info(sys.argv[2])
     elif VERB == 'delete_results':
-        delete_job(sys.argv[2])
+        delete_results(sys.argv[2])
     else:
         print(HELP_STRING)
         sys.exit(3)
